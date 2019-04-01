@@ -1,0 +1,57 @@
+
+INDEXING:
+
+1.An Index acts as a reference to the records. Instead of searching all the records, we can refer to the index to search for a particular record. Indexes maintain the reference of the records. So that it is easy to search for a record with minimum overhead. Indexes also speed up the searching of data.
+
+2.The major advantage of using indexing is; whenever we perform a query on a table that has an index, there is no need for the query to scan all the rows in the table. Further, it checks the index first and then goes to the particular column and performs the operation.
+
+3.So if we maintain indexes, it will be easier for Hive query to look into the indexes first and then perform the needed operations within less amount of time.
+
+4.Types of Indexes in Hive
+
+   A. Compact Indexing
+   B. Bitmap Indexing
+
+Compact indexing stores the pair of indexed column’s value and its blockid.
+Bitmap indexing stores the combination of indexed column value and list of rows as a bitmap.
+(A bitmap is is a type of memory organization or image file format used to store digital images so with this meaning of bitmap, we can redefine bitmap indexing as given below.)
+
+
+The following are the different operations that can be performed on Hive indexes:
+ 
+A.  Creating index:
+>create table employee(id int,name string,age int,country STRING,year STRING,address string,contactno int) row format delimited fields terminated by '\t' stored as textfile;
+
+>load data local inpath ‘path of your file‘into table employee;
+
+>SELECT AVG(age) from employee;
+
+
+>CREATE INDEX employee_index
+ON TABLE employee (age)
+AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+WITH DEFERRED REBUILD;
+
+   B. Showing index
+   >ALTER INDEX employee_index on employee REBUILD; 
+  
+   C.Alter index
+    >show formatted index on employee;
+   
+    D.Dropping index
+
+    >DROP INDEX IF EXISTS employee_index ON employee;
+
+
+B.BITMAP index:
+
+>CREATE INDEX employee_index_bitmap
+ON TABLE employee (age)
+AS 'BITMAP'
+WITH DEFERRED REBUILD;
+ALTER INDEX employee_index_bitmap on employee REBUILD;
+
+>show formatted index on employee;
+
+>DROP INDEX IF EXISTS employee_index ON employee;
+

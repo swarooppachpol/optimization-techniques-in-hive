@@ -1,0 +1,81 @@
+Tez is a new application framework built on Hadoop Yarn, which can execute complex-directed acyclic graphs of general data processing tasks. In many ways, it can be considered to be a much more flexible and powerful successor of the map-reduce framework.
+
+****Maven Installation
+
+1.sudo apt-get install maven
+
+mvn -version
+
+
+****Protocol buffer-2.5.0
+
+download link:
+https://drive.google.com/file/d/0ByJLBTmJojjzRzhoTFFyd2xrZHc/view
+
+1.cd protobuf-2.5.0
+
+2.    ./autogen.sh
+3.    ./configure --prefix=/usr
+
+4.  make
+5.  make install
+6. protoc --version
+
+7.sudo apt-get install protobuf-compiler
+
+****TEZ installation
+download here:
+https://drive.google.com/file/d/0ByJLBTmJojjzUXRhQnJtYlNTMzQ/view
+
+1.go to tez 
+open pom.xml
+
+edit 
+hadoop -2.7.3
+pig-0.16.0
+java-1.8
+
+2. cd apache-tez
+ 
+3.mvn clean package -DskipTests
+
+4.Now, in the target directory of tez-dist you can see two tar balls are created:
+
+tez-0.8.1-alpha.tar.gz
+
+tez-0.8.1-alpha-minimal.tar.gz
+
+5.Create the folder - tez in home
+
+move these tar.gz files in tez folder
+
+5.  cd /home/hadoopuser/hadoop-2.7.3
+
+6.   bin/hdfs dfs -mkdir /tez
+
+7.   bin/hdfs dfs -put /home/tez/tez-0.8.1-alpha.tar.gz /tez/
+
+8.   bin/hdfs dfs -ls /tez/
+
+9.  Now, within the tez folder, which is in your local file system, create two folders with name conf and tez 
+
+10. Extract the contents of the file tez-0.8.1-alpha-minimal.tar.gz to the newly created tez folder.
+
+11.   Now, create a file tez-site.xml in your newly created conf directory and add the below configurations in the tez-site.xml file:
+
+<configuration>
+<property>
+<name>tez.lib.uris</name>
+<value>hdfs://localhost:9000/tez/tez-0.8.1-alpha.tar.gz</value>
+</property>
+</configuration>
+
+
+12.   Now close and save the file. Your Tez is ready! You can now integrate it with Hadoop by adding the following properties in your hadoop-env.sh file of Hadoop.
+
+export TEZ_CONF_DIR=/home/hadoopuser/tez/conf/
+export TEZ_JARS=/home/hadoopuser/tez/tez/
+export HADOOP_CLASSPATH=${TEZ_CONF_DIR}:${TEZ_JARS}/*:${TEZ_JARS}/lib/*:${HADOOP_CLASSPATH}:
+${JAVA_JDBC_LIBS}:${MAPREDUCE_LIBS}
+
+
