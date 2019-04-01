@@ -1,0 +1,53 @@
+
+
+create table university(id int,name string,address string,dept string)
+row format delimited
+fields terminated by ',';
+
+
+1.single partition:
+
+create table unipar(id int,name string,address string)  partitioned by (dept string) row format delimited 
+fields terminated by ',';
+ 
+insert overwrite unipar partition (dept) select * from university;
+
+or 
+
+load data local inpath '/home/hadoopuser/file.txt' into table unipar partition (dept="entc");
+
+
+select * from unipar;
+
+
+
+2.single bucketing
+
+
+create table unibucket (id int ,name string ,address string ,cno int ,dept string)
+clustered by (dept)
+into 4 bucket
+row format delimited
+fields terminated by ','
+
+
+insert into unibucket select * from university;
+
+select * from unibucket tablesample(bucket 1 out of 4 on address);
+
+or 
+
+load data local inpath '/home/hadoopuser/file.txt' into table unibucket;
+
+
+
+3.partitioning and bucketing
+
+
+create table unibucket (id int ,name string ,address string ,cno int )
+partitioned by (dept string)
+clustered by (address)
+into 4 bucket
+row format delimited
+fields terminated by ','
+
